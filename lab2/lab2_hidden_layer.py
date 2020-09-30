@@ -25,12 +25,14 @@ X_test  = X_test / 255
 #We want to have a binary classification: digit 0 is classified 1 and 
 #all the other digits are classified 0
 
+
+
 y_new = np.zeros(y_train.shape)
-y_new[np.where(y_train==0.0)[0]] = 1
+y_new[np.where(y_train==3.)[0]] = 1
 y_train = y_new
 
 y_new = np.zeros(y_test.shape)
-y_new[np.where(y_test==0.0)[0]] = 1
+y_new[np.where(y_test==3.)[0]] = 1
 y_test = y_new
 
 
@@ -56,6 +58,7 @@ X = X_train
 Y = y_train
 
 n = X_train.shape[0]
+
 lr = 0.01
 nh = 64
 
@@ -77,7 +80,7 @@ for i in range(epochs):
     loss = compute_loss(Y,Yhat)
 
     dZ2 = Yhat - Y
-    dW2 = 1. / m * np.matmul(dZ2, X.T)
+    dW2 = 1. / m * np.matmul(dZ2, Y1.T)
     db2 = 1. / m * np.sum(dZ2, axis = 1, keepdims = True)
 
     dY1 = np.matmul(W2.T,dZ2)
@@ -86,26 +89,20 @@ for i in range(epochs):
     db1 = 1. / m * np.sum(dZ1,axis = 1, keepdims=True)
 
     W1 = W1 - lr * dW1
-    b1 = W1 - lr * dW1
-    W2 = W2 - lr * W2
+    b1 = b1 - lr * db1
+    W2 = W2 - lr * dW2
     b2 = b2 - lr * db2 
     
     if i%10==0:
         print("Epoch",i,"loss value:",loss)
 
 
-# #Display one image and corresponding label 
-# import matplotlib
-# import matplotlib.pyplot as plt
-# i = 3
-# print('y[{}]={}'.format(i, y_train[:,i]))
-# plt.imshow(X_train[:,i].reshape(28,28), cmap = matplotlib.cm.binary)
-# plt.axis("off")
-# plt.show()
+Z1 = np.matmul(W1,X_test) + b1
+Y1 = sigmoid(Z1)
+Z2 = np.matmul(W2,Y1) + b2
+Yhat = sigmoid(Z2)
+loss = compute_loss(y_test,Yhat)
+
+print("Final accuracy:",1-loss)
 
 
-#Let start our work: creating a neural network
-#First, we just use a single neuron. 
-
-
-#####TO COMPLETE
