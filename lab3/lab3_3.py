@@ -50,6 +50,7 @@ y_test = tensorflow.keras.utils.to_categorical(y_test)
 num_classes = y_train.shape[1]
 #Faire plus de 0.99, 0.98 c'est bien
 #on peut ajouter des couches
+#courbe train test sur meme image
 results = []
 
 for bs in [128,200,500]:
